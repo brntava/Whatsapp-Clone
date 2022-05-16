@@ -108,7 +108,7 @@ class WhatsAppController{
 
             this.getForm().forEach((value, key) => {
 
-                json[key] = value;
+                json[value] = key;
 
             });
 
@@ -199,6 +199,133 @@ class WhatsAppController{
             let formData = new FormData(this.el.formPanelAddContact);
 
         })
+
+        //
+
+        this.el.contactsMessagesList.querySelectorAll('.contact-item').forEach(item =>{
+
+            item.on('click', e =>{
+
+                this.el.home.hide();
+                this.el.main.css({display: 'flex'})
+
+            })
+
+        })
+
+        // Anexos
+
+        this.el.btnAttach.on('click', e =>{
+
+            e.stopPropagation(); // nao remove todos de uma vez
+
+            this.el.menuAttach.addClass('open');
+
+            document.addEventListener('click', this.closeMenuAttach.bind(this));
+
+        })
+
+        //
+
+        this.el.btnAttachPhoto.on('click', e =>{
+
+            this.el.inputPhoto.click();
+
+
+        })
+
+        this.el.inputPhoto.on('change', e =>{
+
+            console.log(this.el.inputPhoto.files);
+
+            [...this.el.inputPhoto.files].forEach(file =>{
+
+                console.log(file)
+
+            })
+
+        })
+
+        //
+
+        this.el.btnAttachCamera.on('click', e =>{
+
+            this.closeAllMainPanel();
+            this.el.panelCamera.addClass('open');
+            this.el.panelCamera.css({
+                'height': '100%'
+            })
+
+        })
+
+        this.el.btnClosePanelCamera.on('click', e => {
+
+            this.closeAllMainPanel();
+            this.el.panelMessagesContainer.show();
+
+        })
+
+        //
+
+        this.el.btnTakePicture.on('click', e =>{
+
+            console.log('foto tirada')
+
+        })
+
+        //
+
+        this.el.btnAttachDocument.on('click', e =>{
+
+            this.closeAllMainPanel();
+            this.el.panelDocumentPreview.addClass('open');
+            this.el.panelDocumentPreview.css({
+                'height': '100%'
+            })
+
+        })
+
+        this.el.btnClosePanelDocumentPreview.on('click', e => {
+
+            this.closeAllMainPanel();
+            this.el.panelMessagesContainer.show();
+
+        })
+
+        this.el.btnSendDocument.on('click', e =>{
+
+            console.log('send document')
+
+        })
+
+        //
+
+        this.el.btnAttachContact.on('click', e =>{
+
+            this.el.modalContacts.show();
+
+        })
+
+        this.el.btnCloseModalContacts.on('click', e =>{
+
+            this.el.modalContacts.hide();
+
+        })
+
+    }
+
+    closeAllMainPanel(){
+
+        this.el.panelMessagesContainer.hide();
+        this.el.panelDocumentPreview.removeClass('open');
+        this.el.panelCamera.removeClass('open')
+
+    }
+
+    closeMenuAttach(e){
+
+        document.removeEventListener('click', this.closeMenuAttach);
+        this.el.menuAttach.removeClass('open');
 
     }
 
