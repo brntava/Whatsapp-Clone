@@ -1,0 +1,25 @@
+{
+  "name": "whatsapp",
+  "version": "1.0.0",
+  "description": "Projeto para fazer um clone do WhatsApp usando Javascript puro",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack --config webpack.config.js",
+    "start": "webpack-dev-server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/brntava/Whatsapp-Clone.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/brntava/Whatsapp-Clone/issues"
+  },
+  "homepage": "https://github.com/brntava/Whatsapp-Clone#readme",
+  "dependencies": {
+    "webpack": "^3.1.0",
+    "webpack-dev-server": "^2.5.1"
+  }
+}
