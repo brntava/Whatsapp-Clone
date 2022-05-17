@@ -371,6 +371,7 @@ export class WhatsAppController{
                             this.el.iconPanelDocumentPreview.className = 'jcxhw icon-doc-generic';
                         break
                     }
+                    
 
                     this.el.filenamePanelDocumentPreview.innerHTML = file.name;
                     this.el.imagePanelDocumentPreview.hide();
