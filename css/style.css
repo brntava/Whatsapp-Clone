@@ -9829,9 +9829,13 @@ html[dir] ._1l3ap{
     position:absolute;
     top:-1px
 }
-.IuYNx,._1Y0rl,.bUPnO,.zrbdc{
+._1Y0rl,.bUPnO,.zrbdc{
     height:100%;
     width:100%
+}
+.IuYNx{
+    height: 100%;
+    width: auto;
 }
 html[dir] ._1l3ap:before{
     border:2px solid rgba(255,255,255,.1);
@@ -14777,7 +14781,6 @@ html[dir=rtl] ._2k1om .xVBLL,html[dir=rtl] .r4crx ._2-_Pl{
     height:40px
 }
 html[dir] .r4crx ._2GgBs{
-    padding-top:40px;
     text-align:center
 }
 .r4crx ._3m_5X{
@@ -16135,4 +16138,13 @@ html[dir=rtl] ._2ICcy:after{
 }
 #main {
     display:none;
+}
+._2oKPV{
+    display: flex;
+    justify-content: center;
+}
+#picture-camera{
+    height: 100%;
+    width: auto;
+    text-align: center;
 }
