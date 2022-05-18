@@ -3,15 +3,45 @@ import {CameraController} from './CameraController';
 import {MicrophoneController} from './MicrophoneController';
 import { DocumentPreviewController } from './DocumentPreviewController';
 import { Firebase } from '../utils/Firebase';
+import { User } from '../Model/User';
 
 export class WhatsAppController{
 
     constructor(){
 
+        this._firebase = new Firebase();
+        this.initAuth();
         this.elemenstPrototype();
         this.loadElemenst();
         this.initEvents();
-        this._firebase = new Firebase();
+
+    }
+
+    initAuth(){
+
+        this._firebase.initAuth()
+        .then(response =>{
+
+            this._user = new User();
+
+            let userRef = User.findByEmail(response.user.email);
+
+            // Dados q quero salvar no banco
+
+            userRef.set({
+                name: response.user.displayName,
+                email: response.user.email
+            }).then(() => {
+
+                this.el.appContent.css({
+                    display: 'flex'
+                });
+
+            })
+
+        }).catch(err =>{
+            console.error(err)
+        })
 
     }
 
