@@ -4,6 +4,7 @@ import {MicrophoneController} from './MicrophoneController';
 import { DocumentPreviewController } from './DocumentPreviewController';
 import { Firebase } from '../utils/Firebase';
 import { User } from '../Model/User';
+import { Message } from '../Model/Message';
 
 export class WhatsAppController{
 
@@ -30,6 +31,8 @@ export class WhatsAppController{
 
                 this.el.inputNamePanelEditProfile.innerHTML = data.name;
 
+                this.initContacts();
+
                 if(data.photo){
 
                     let photo = this.el.imgPanelEditProfile;
@@ -42,8 +45,6 @@ export class WhatsAppController{
                     photo2.show();
 
                 }
-
-                this.initContacts();
 
             });
 
@@ -67,11 +68,13 @@ export class WhatsAppController{
 
     initContacts(){
 
-        this._user.on('changecontacts', docs => {
+        this._user.on('contactschange', docs => {
 
             this.el.contactsMessagesList.innerHTML = '';
 
             docs.forEach(doc => {
+
+                let contact = doc.data();
 
                 let div = document.createElement('div');
 
@@ -96,10 +99,10 @@ export class WhatsAppController{
                 <div class="_3j7s9">
                     <div class="_2FBdJ">
                         <div class="_25Ooe">
-                            <span dir="auto" title="Nome do Contato" class="_1wjpf">Nome do Contato</span>
+                            <span dir="auto" title="${contact.name}" class="_1wjpf">${contact.name}</span>
                         </div>
                         <div class="_3Bxar">
-                            <span class="_3T2VG">18:03</span>
+                            <span class="_3T2VG">${contact.lastMessageTime}</span>
                         </div>
                     </div>
                     <div class="_1AwDx">
@@ -114,7 +117,7 @@ export class WhatsAppController{
                                         </svg>
                                     </span>
                                 </div>
-                                <span dir="ltr" class="_1wjpf _3NFp9">Ok</span>
+                                <span dir="ltr" class="_1wjpf _3NFp9">${contact.lastMessage}</span>
                                 <div class="_3Bxar">
                                     <span>
                                         <div class="_15G96">
@@ -126,6 +129,38 @@ export class WhatsAppController{
                     </div>
                 </div>
                 `;
+
+                if(contact.photo){
+
+                    let img = div.querySelector('.photo');
+                    img.src = contact.photo;
+                    img.show();
+
+                }
+
+                // Abrir painel quando clicar no ctt
+
+                div.on('click', e => {
+
+                    this.el.activeName.innerHTML = contact.name; 
+                    this.el.activeStatus.innerHTML = contact.status;
+
+                    if(contact.photo){
+
+                        let img = this.el.activePhoto;
+                        img.src = contact.photo;
+                        img.show();
+
+                    }
+
+                    this.el.home.hide();
+                    this.el.main.css({
+                        display: 'flex'
+                    })
+
+
+                })
+
 
                 this.el.contactsMessagesList.appendChild(div)
             })
