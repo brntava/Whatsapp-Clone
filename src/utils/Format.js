@@ -1,3 +1,5 @@
+import { FormatError } from "pdfjs-dist";
+
 export class Format {
 
     static getCamelCase(text){
@@ -23,6 +25,21 @@ export class Format {
         } else {
             return `${mm}:${ss.toString().padStart(2, '0')}`
         }
+
+    }
+
+    static dateToTime(date, locale = 'pt-br'){
+
+        return date.toLocaleTimeString(locale, {
+            hours: '2-digits',
+            minutes: '2-digits'
+        });
+
+    }
+
+    static timeStampToTime(timeStamp){
+
+        return (timeStamp && typeof timeStamp.toDate === 'function') ? Format.dateToTime(timeStamp.toDate()): '';
 
     }
 

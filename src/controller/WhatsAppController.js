@@ -143,24 +143,7 @@ export class WhatsAppController{
 
                 div.on('click', e => {
 
-                    console.log(`chatid`,contact.chatId)
-
-                    this.el.activeName.innerHTML = contact.name; 
-                    this.el.activeStatus.innerHTML = contact.status;
-
-                    if(contact.photo){
-
-                        let img = this.el.activePhoto;
-                        img.src = contact.photo;
-                        img.show();
-
-                    }
-
-                    this.el.home.hide();
-                    this.el.main.css({
-                        display: 'flex'
-                    })
-
+                    this.setActiveChat(contact)
 
                 })
 
@@ -172,6 +155,65 @@ export class WhatsAppController{
         });
 
         this._user.getContacts();
+
+    }
+
+    // Ativar o painel de mensagens com o ctt
+
+    setActiveChat(contact){
+
+        if(this._contactActive){
+            Message.getRef(this._contactActive.idChat).onSnapshot(() => {})
+        }
+
+        this._contactActive = contact;
+
+        this.el.activeName.innerHTML = contact.name; 
+        this.el.activeStatus.innerHTML = contact.status;
+
+        if(contact.photo){
+
+            let img = this.el.activePhoto;
+            img.src = contact.photo;
+            img.show();
+
+        }
+
+        this.el.home.hide();
+        this.el.main.css({
+            display: 'flex'
+        })
+
+        Message.getRef(this._contactActive.chatId).orderBy('timeStamp')
+        .onSnapshot(docs => {
+
+            this.el.panelMessagesContainer.innerHTML = '';
+
+            docs.forEach(doc => {
+
+                let data = doc.data();
+                data.id = doc.id;
+
+                if(!this.el.panelMessagesContainer.querySelector(`#_${data.id}`)){
+
+                    let message = new Message();
+
+                    message.fromJSON(data);
+
+                    // Verificar se e minha mensagem
+
+                    let me = (data.from === this._user.email);
+                    
+                    let view = message.getViewElement(me);
+
+                    this.el.panelMessagesContainer.appendChild(view);
+
+                };
+
+            })
+
+
+        })
 
     }
 
@@ -688,7 +730,15 @@ export class WhatsAppController{
 
         this.el.btnSend.on('click', e => {
 
-            console.log('send')
+            Message.send(
+                this._contactActive.chatId,
+                this._user.email,
+                'text',
+                this.el.inputText.innerHTML
+            );
+
+            this.el.inputText.innerHTML = '';
+            this.el.panelEmojis.removeClass('open')
 
         })
 
