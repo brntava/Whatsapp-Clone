@@ -5,6 +5,7 @@ import { DocumentPreviewController } from './DocumentPreviewController';
 import { Firebase } from '../utils/Firebase';
 import { User } from '../Model/User';
 import { Message } from '../Model/Message';
+import { Chat } from '../Model/Chat';
 
 export class WhatsAppController{
 
@@ -142,6 +143,8 @@ export class WhatsAppController{
 
                 div.on('click', e => {
 
+                    console.log(`chatid`,contact.chatId)
+
                     this.el.activeName.innerHTML = contact.name; 
                     this.el.activeStatus.innerHTML = contact.status;
 
@@ -162,7 +165,7 @@ export class WhatsAppController{
                 })
 
 
-                this.el.contactsMessagesList.appendChild(div)
+                this.el.contactsMessagesList.appendChild(div);
             })
             
 
@@ -376,12 +379,26 @@ export class WhatsAppController{
 
                 if(data.name){
 
-                    this._user.addContact(contact).then(() =>{
+                    Chat.createIfNotExists(this._user.email, contact.email).then(chat => {
 
-                        this.el.btnClosePanelAddContact.click();
-                        console.log(`contato add`);
+                        // Definir Id para cada conversa
 
-                    });
+                        contact.chatId = chat.id;
+
+                        this._user.chatId = chat.id;
+
+                        contact.addContact(this._user)
+
+                        // Add contato novo
+
+                        this._user.addContact(contact).then(() =>{
+
+                            this.el.btnClosePanelAddContact.click();
+                            console.log(`contato add`);
+    
+                        });
+
+                    })
 
                 } else{
                     console.log(`Usuario nao encontrado`)

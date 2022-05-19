@@ -3,9 +3,7 @@ import { Model } from "./Model";
 export class Message extends Model{
 
     constructor(){
-
         super();
-
     }
 
     get content(){return this._data.content};
