@@ -7,6 +7,7 @@ import { User } from '../Model/User';
 import { Message } from '../Model/Message';
 import { Chat } from '../Model/Chat';
 import { Base64 } from '../utils/base64';
+import { ContactsController } from './ContactsController';
 
 export class WhatsAppController{
 
@@ -213,6 +214,8 @@ export class WhatsAppController{
 
                 let me = (data.from === this._user.email);
 
+                let view = message.getViewElement(me);
+
                 if(!this.el.panelMessagesContainer.querySelector(`#_${data.id}`)){
 
                     // Verificar leitura da mensagem
@@ -226,16 +229,15 @@ export class WhatsAppController{
                         })
 
                     }
-                    
-                    let view = message.getViewElement(me);
 
                     this.el.panelMessagesContainer.appendChild(view);
                     
                 } else{
 
-                    let view = message.getViewElement(me);
 
-                    this.el.panelMessagesContainer.querySelector(`#_${data.id}`).innerHTML = view.innerHTML;
+                    let parent = this.el.panelMessagesContainer.querySelector(`#_${data.id}`).parentNode;
+
+                    parent.replaceChild(view, this.el.panelMessagesContainer.querySelector(`#_${data.id}`))
 
                 } 
                 
@@ -246,20 +248,52 @@ export class WhatsAppController{
                     msgEl.querySelector('.message-status').innerHTML = message.getStatusViewElement().outerHTML;
 
                 };
-                
-                if(autoScroll) {
-    
-                    this.el.panelMessagesContainer.scrollTop =
-                    (this.el.panelMessagesContainer.scrollHeight - 
-                    this.el.panelMessagesContainer.offsetHeight);
-    
-                } else {
+               
+                if(message.type === 'contact'){
 
-                    this.el.panelMessagesContainer.scrollTop = scrollTop;
+                    view.querySelector('.btn-message-send').on('click', e => {
+
+                        Chat.createIfNotExists(this._user.email, message.content.email).then(chat => {
+
+                            let contact = new User(message.content.email);
+
+                            // Definir Id para cada conversa
+
+                            contact.on('datachange', data => {
+
+                                contact.chatId = chat.id;
+
+                                this._user.addContact(contact);
+
+                                this._user.chatId = chat.id;
+        
+                                contact.addContact(this._user)
+        
+                                // Add contato novo
+                                
+                                this.setActiveChat(contact);
+
+                            })
+    
+                        })
+
+                    })
 
                 }
-                
-            })
+
+            });
+
+            if(autoScroll) {
+    
+                this.el.panelMessagesContainer.scrollTop =
+                (this.el.panelMessagesContainer.scrollHeight - 
+                this.el.panelMessagesContainer.offsetHeight);
+
+            } else {
+
+                this.el.panelMessagesContainer.scrollTop = scrollTop;
+
+            }
 
 
         })
@@ -779,13 +813,26 @@ export class WhatsAppController{
 
         this.el.btnAttachContact.on('click', e =>{
 
-            this.el.modalContacts.show();
+            this._contactsController = new ContactsController(this.el.modalContacts, this._user);
+
+            this._contactsController.on('select',contact => {
+
+                Message.sendContact(
+                    this._contactActive.chatId,
+                    this._user.email,
+                    contact
+                )
+
+
+            })
+
+            this._contactsController.open();
 
         })
 
         this.el.btnCloseModalContacts.on('click', e =>{
 
-            this.el.modalContacts.hide();
+            this._contactsController.close();
 
         })
 
