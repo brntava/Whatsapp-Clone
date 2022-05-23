@@ -732,8 +732,6 @@ export class WhatsAppController{
             this.el.containerTakePicture.hide();
             this.el.containerSendPicture.show();
 
-            console.log(dataUrl)
-
         })
 
         // 

@@ -16148,3 +16148,8 @@ html[dir=rtl] ._2ICcy:after{
     width: auto;
     text-align: center;
 }
+#webimg{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
