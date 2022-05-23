@@ -8,6 +8,7 @@ import { Message } from '../Model/Message';
 import { Chat } from '../Model/Chat';
 import { Base64 } from '../utils/base64';
 import { ContactsController } from './ContactsController';
+import { Upload } from '../utils/Upload';
 
 export class WhatsAppController{
 
@@ -105,7 +106,7 @@ export class WhatsAppController{
                             <span dir="auto" title="${contact.name}" class="_1wjpf">${contact.name}</span>
                         </div>
                         <div class="_3Bxar">
-                            <span class="_3T2VG">${contact.lastMessageTime}</span>
+                            <span class="_3T2VG">${Format.timeStampToTime(contact.lastMessageTime)}</span>
                         </div>
                     </div>
                     <div class="_1AwDx">
@@ -473,6 +474,33 @@ export class WhatsAppController{
         })
 
         //
+
+        this.el.inputProfilePhoto.on('change', e => {
+
+            if(this.el.inputProfilePhoto.files.length > 0){
+
+                let file = this.el.inputProfilePhoto.files[0];
+
+                Upload.send(file, this._user.email).then(snapshot => {
+
+                    snapshot.ref.getDownloadURL().then(url => {
+                    
+                        this._user.photo = url;
+                        this._user.save().then(() => {
+
+                            this.el.btnClosePanelEditProfile.click();
+
+                        })
+
+                    });
+
+                });
+
+            }
+
+        })
+
+        // 
 
         this.el.inputNamePanelEditProfile.on('keypress', e => {
 

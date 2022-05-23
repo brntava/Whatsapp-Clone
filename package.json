@@ -20,6 +20,7 @@
   "homepage": "https://github.com/brntava/Whatsapp-Clone#readme",
   "dependencies": {
     "firebase": "^8.1.2",
+    "firebase-tools": "^11.0.0",
     "pdfjs-dist": "^2.0.489",
     "webpack": "^3.1.0",
     "webpack-dev-server": "^2.5.1"
