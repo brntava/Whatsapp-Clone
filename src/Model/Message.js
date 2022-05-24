@@ -54,8 +54,8 @@ export class Message extends Model{
 
         let div = document.createElement('div');
 
-        div.id = `${this.id}`
         div.className = 'message';
+        div.id = `_${this.id}`
 
         switch(this.type){
 
@@ -399,7 +399,7 @@ export class Message extends Model{
 
         // Verificar se fui eu q mandei a mensagem
 
-        let className = 'message-in';
+        let className = (me) ? 'message-out' : 'message-in';
 
         if(me){
 
@@ -411,7 +411,7 @@ export class Message extends Model{
 
         div.firstElementChild.classList.add(className)
 
-        return div
+        return div;
     }
 
     static upload(file, from){

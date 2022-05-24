@@ -71,8 +71,8 @@ export class User extends Model{
     addContact(contact){
 
         return User.getContactsRef(this.email)
-            .doc(btoa(this.email))
-            .set(this.toJSON());
+            .doc(btoa(contact.email))
+            .set(contact.toJSON());
 
     }
 
@@ -94,7 +94,7 @@ export class User extends Model{
 
                 });
 
-                this.trigger('contactschange', docs)
+                this.trigger('contactschange', contacts)
 
                 s(contacts);
 

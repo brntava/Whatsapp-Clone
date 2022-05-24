@@ -58,7 +58,7 @@ export class WhatsAppController{
 
     notification(data){
 
-        if(Notification.permission === 'granted' && !this.active){
+        if(Notification.permission === 'granted' && !this._active){
 
             let n = new Notification(this._contactActive.name, {
                 icon: this._contactActive.photo,
@@ -135,7 +135,7 @@ export class WhatsAppController{
 
             docs.forEach(doc => {
 
-                let contact = doc.data();
+                let contact = doc;
 
                 let div = document.createElement('div');
 
@@ -647,8 +647,6 @@ export class WhatsAppController{
                 }
 
             })
-
-            this._user.addContact();
 
         })
 
